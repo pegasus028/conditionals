@@ -139,19 +139,164 @@
 /* Paste your deployed Google Apps Script Web App URL below */
 const API_URL = "https://script.google.com/macros/s/AKfycbx2416RBKSZnwVPJjA8yBaLysGxNTGrQfwC3E4aDVaRI6salrHXIO19GKvjN3Dz8lIeAQ/exec";
 
-/* Fallback scenario bank — used if the API is unreachable (offline demo). */
+/* Fallback scenario bank — used if the API is unreachable (offline demo).
+   Mirrors the server bank: subject + [blank] + tail, with options + answers. */
 const FALLBACK = [
-  {id:'q1',type:'Type 2 (Unreal Present)',cause:{subject:'The school director',verbRoot:'know'},result:{subject:'we',verbRoot:'be'},_c:'knew',_r:'would be',
-    cOpts:['knows','knew','had known','would know'],rOpts:['will be','would be','would have been','are']},
-  {id:'q2',type:'Type 0 (General Truth)',cause:{subject:'you',verbRoot:'heat'},result:{subject:'ice',verbRoot:'melt'},_c:'heat',_r:'melts',
-    cOpts:['heat','heats','heated','will heat'],rOpts:['melt','melts','melted','would melt']},
-  {id:'q3',type:'Type 1 (Real Future)',cause:{subject:'it',verbRoot:'rain'},result:{subject:'the students',verbRoot:'stay'},_c:'rains',_r:'will stay',
-    cOpts:['rain','rains','rained','would rain'],rOpts:['stay','stays','will stay','would stay']},
-  {id:'q4',type:'Type 3 (Unreal Past)',cause:{subject:'she',verbRoot:'study'},result:{subject:'she',verbRoot:'pass'},_c:'had studied',_r:'would have passed',
-    cOpts:['studied','had studied','studies','would study'],rOpts:['would pass','passed','would have passed','will pass']},
-  {id:'q5',type:'Mixed (Past → Present)',cause:{subject:'they',verbRoot:'save'},result:{subject:'they',verbRoot:'be'},_c:'had saved',_r:'would be',
-    cOpts:['saved','had saved','save','would save'],rOpts:['are','would be','will be','would have been']},
+  {id:'q1',type:'Type 1 (Real Future)',
+   cause:{lead:'Unless they',tail:'the infrastructure'},result:{lead:'the government',tail:'in'},
+   _c:'streamline',_r:'will step',cOpts:["streamline", "streamlined", "had streamlined", "would streamline"],rOpts:["steps", "will step", "would step", "had stepped"]},
+  {id:'q2',type:'Type 1 (Real Future)',
+   cause:{lead:'Provided that he',tail:'the bait'},result:{lead:'we',tail:'him'},
+   _c:'takes',_r:'will catch',cOpts:["takes", "took", "had taken", "would take"],rOpts:["catch", "will catch", "would catch", "had caught"]},
+  {id:'q3',type:'Type 1 (Real Future)',
+   cause:{lead:'As long as you',tail:'the rules'},result:{lead:'you',tail:'your anonymity'},
+   _c:'follow',_r:'will keep',cOpts:["follow", "followed", "had followed", "would follow"],rOpts:["keep", "will keep", "would keep", "had kept"]},
+  {id:'q4',type:'Type 1 (Real Future)',
+   cause:{lead:'Supposing he',tail:'the vulnerability'},result:{lead:'the AI',tail:'instantly'},
+   _c:'exploits',_r:'will react',cOpts:["exploits", "exploited", "had exploited", "would exploit"],rOpts:["reacts", "will react", "would react", "had reacted"]},
+  {id:'q5',type:'Type 1 (Real Future)',
+   cause:{lead:'If another major breach',tail:'soon'},result:{lead:'the government',tail:'step in'},
+   _c:'happens',_r:'must',cOpts:["happens", "happened", "had happened", "would happen"],rOpts:["must", "would", "might have", "could have"]},
+  {id:'q6',type:'Type 1 (Real Future)',
+   cause:{lead:'If the system',tail:'an error'},result:{lead:'Elias',tail:'investigate it'},
+   _c:'flags',_r:'will',cOpts:["flags", "flagged", "had flagged", "would flag"],rOpts:["will", "would", "had to", "will have"]},
+  {id:'q7',type:'Type 1 (Real Future)',
+   cause:{lead:'Unless David',tail:'careful'},result:{lead:'Labyrinth',tail:'his terminal'},
+   _c:'is',_r:'will lock',cOpts:["is", "was", "had been", "would be"],rOpts:["locks", "will lock", "would lock", "had locked"]},
+  {id:'q8',type:'Type 1 (Real Future)',
+   cause:{lead:'Provided that Marcus',tail:'CEO'},result:{lead:'our data',tail:'safe'},
+   _c:'remains',_r:'will be',cOpts:["remains", "remained", "had remained", "would remain"],rOpts:["is", "will be", "would be", "had been"]},
+  {id:'q9',type:'Type 1 (Real Future)',
+   cause:{lead:'As long as the firewall',tail:'robust'},result:{lead:'attackers',tail:'fail'},
+   _c:'is',_r:'will',cOpts:["is", "was", "had been", "would be"],rOpts:["will", "have", "had to", "should have"]},
+  {id:'q10',type:'Type 1 (Real Future)',
+   cause:{lead:'If a company',tail:'a breach'},result:{lead:'it',tail:'report it'},
+   _c:'experiences',_r:'must',cOpts:["experiences", "experienced", "had experienced", "would experience"],rOpts:["must", "would", "might have", "could have"]},
+  {id:'q11',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If the firewall',tail:'robust'},result:{lead:'we',tail:'totally safe'},
+   _c:'were',_r:'would feel',cOpts:["were", "is", "had been", "will be"],rOpts:["will feel", "would feel", "felt", "would have felt"]},
+  {id:'q12',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If our management',tail:'so opaque'},result:{lead:'we',tail:'the truth'},
+   _c:'weren\'t',_r:'might know',cOpts:["weren't", "isn't", "hadn't been", "won't be"],rOpts:["might know", "might have known", "might knew", "will know"]},
+  {id:'q13',type:'Type 2 (Unreal Present)',
+   cause:{lead:'Supposing you',tail:'a vulnerability'},result:{lead:'you',tail:'the security team'},
+   _c:'found',_r:'would tell',cOpts:["found", "find", "had found", "would find"],rOpts:["will tell", "would tell", "told", "would have told"]},
+  {id:'q14',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If I',tail:'you'},result:{lead:'I',tail:'the security protocols'},
+   _c:'were',_r:'would streamline',cOpts:["were", "am", "had been", "will be"],rOpts:["will streamline", "would streamline", "streamlined", "would have streamlined"]},
+  {id:'q15',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If he',tail:'the code'},result:{lead:'Elias',tail:'the attack'},
+   _c:'understood',_r:'could stop',cOpts:["understood", "understands", "had understood", "would understand"],rOpts:["can stop", "could stop", "stopped", "could have stopped"]},
+  {id:'q16',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If the paradigm',tail:'different'},result:{lead:'hackers',tail:'us'},
+   _c:'were',_r:'might not attack',cOpts:["were", "is", "had been", "has been"],rOpts:["will not attack", "might not attack", "did not attack", "might not have attacked"]},
+  {id:'q17',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If we',tail:'a decoy'},result:{lead:'we',tail:'the insider'},
+   _c:'built',_r:'could catch',cOpts:["built", "build", "had built", "would build"],rOpts:["can catch", "could catch", "caught", "could have caught"]},
+  {id:'q18',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If the board',tail:'honest'},result:{lead:'they',tail:'the breach'},
+   _c:'were',_r:'wouldn\'t hide',cOpts:["were", "are", "had been", "will be"],rOpts:["won't hide", "wouldn't hide", "didn't hide", "wouldn't have hidden"]},
+  {id:'q19',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If the system',tail:'safe'},result:{lead:'Marcus',tail:'the plug'},
+   _c:'were',_r:'wouldn\'t pull',cOpts:["were", "is", "had been", "will be"],rOpts:["won't pull", "wouldn't pull", "didn't pull", "wouldn't have pulled"]},
+  {id:'q20',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If Labyrinth',tail:'an active threat'},result:{lead:'it',tail:'them'},
+   _c:'detected',_r:'could trap',cOpts:["detected", "detects", "had detected", "would detect"],rOpts:["can trap", "could trap", "trapped", "could have trapped"]},
+  {id:'q21',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If they',tail:'the threat'},result:{lead:'the breach',tail:'at all'},
+   _c:'had caught',_r:'would not have happened',cOpts:["had caught", "caught", "catch", "would catch"],rOpts:["would not happen", "would not have happened", "did not happen", "will not happen"]},
+  {id:'q22',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If protocols',tail:'stronger'},result:{lead:'David',tail:'his anonymity'},
+   _c:'had been',_r:'would have kept',cOpts:["had been", "were", "was", "are"],rOpts:["would keep", "would have kept", "kept", "will keep"]},
+  {id:'q23',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If they',tail:'to the warnings'},result:{lead:'they',tail:'about this crisis'},
+   _c:'had listened',_r:'wouldn\'t have brought',cOpts:["had listened", "listened", "listen", "would listen"],rOpts:["wouldn't bring", "wouldn't have brought", "didn't bring", "won't bring"]},
+  {id:'q24',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If protocols',tail:'streamlined'},result:{lead:'hackers',tail:'the servers'},
+   _c:'had been',_r:'could not have exploited',cOpts:["had been", "were", "was", "are"],rOpts:["could not exploit", "could not have exploited", "cannot exploit", "could not having exploited"]},
+  {id:'q25',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If the evidence',tail:'outward'},result:{lead:'the attack',tail:'an external threat'},
+   _c:'had pointed',_r:'could have been',cOpts:["had pointed", "pointed", "points", "would point"],rOpts:["could be", "could have been", "was", "had been"]},
+  {id:'q26',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If the AI',tail:'ready'},result:{lead:'it',tail:'the intruder'},
+   _c:'had been',_r:'would have trapped',cOpts:["had been", "were", "was", "is"],rOpts:["would trap", "would have trapped", "trapped", "will trap"]},
+  {id:'q27',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If they',tail:'the network'},result:{lead:'they',tail:'it was weak'},
+   _c:'had inspected',_r:'would have known',cOpts:["had inspected", "inspected", "inspect", "would inspect"],rOpts:["would know", "would have known", "knew", "will know"]},
+  {id:'q28',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If David',tail:'the file'},result:{lead:'he',tail:'caught'},
+   _c:'had ignored',_r:'would not have been',cOpts:["had ignored", "ignored", "ignore", "would ignore"],rOpts:["would not be", "would not have been", "was not", "will not be"]},
+  {id:'q29',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If the old CEO',tail:'honest'},result:{lead:'he',tail:'everything'},
+   _c:'had been',_r:'would have confessed',cOpts:["had been", "were", "was", "is"],rOpts:["would confess", "would have confessed", "confessed", "will confess"]},
+  {id:'q30',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If the stock price',tail:'sharply'},result:{lead:'the board',tail:'the vulnerability'},
+   _c:'had dropped',_r:'might have hidden',cOpts:["had dropped", "dropped", "drops", "would drop"],rOpts:["might hide", "might have hidden", "might hid", "might has hidden"]},
+  {id:'q31',type:'Mixed (Past -> Present)',
+   cause:{lead:'If he',tail:'it'},result:{lead:'he',tail:'a free man today'},
+   _c:'hadn\'t clicked',_r:'would be',cOpts:["hadn't clicked", "didn't click", "doesn't click", "won't click"],rOpts:["will be", "would be", "would have been", "is"]},
+  {id:'q32',type:'Mixed (Present -> Past)',
+   cause:{lead:'If our leaders',tail:'opaque'},result:{lead:'we',tail:'the warning yesterday'},
+   _c:'weren\'t',_r:'would have heard',cOpts:["weren't", "aren't", "hadn't been", "won't be"],rOpts:["would hear", "would have heard", "heard", "will hear"]},
+  {id:'q33',type:'Mixed (Past -> Present)',
+   cause:{lead:'If they',tail:'a robust firewall'},result:{lead:'we',tail:'safe now'},
+   _c:'had built',_r:'would be',cOpts:["had built", "built", "build", "would build"],rOpts:["will be", "would be", "would have been", "are"]},
+  {id:'q34',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If David',tail:'so arrogant'},result:{lead:'he',tail:'that decoy file'},
+   _c:'hadn\'t been',_r:'wouldn\'t have opened',cOpts:["hadn't been", "weren't", "wasn't", "isn't"],rOpts:["wouldn't open", "wouldn't have opened", "didn't open", "won't open"]},
+  {id:'q35',type:'Mixed (Past -> Present)',
+   cause:{lead:'If they',tail:'the network'},result:{lead:'we',tail:'anonymity today'},
+   _c:'had secured',_r:'would have',cOpts:["had secured", "secured", "secure", "would secure"],rOpts:["will have", "would have", "would have had", "have"]},
+  {id:'q36',type:'Mixed (Past -> Present)',
+   cause:{lead:'If GlobalNet',tail:'this crisis'},result:{lead:'these laws',tail:'today'},
+   _c:'hadn\'t triggered',_r:'would not exist',cOpts:["hadn't triggered", "didn't trigger", "doesn't trigger", "won't trigger"],rOpts:["will not exist", "would not exist", "did not exist", "would not have existed"]},
+  {id:'q37',type:'Type 3 (Unreal Past)',
+   cause:{lead:'If he',tail:'the safety measures'},result:{lead:'he',tail:'into the trap'},
+   _c:'had understood',_r:'wouldn\'t have fallen',cOpts:["had understood", "understood", "understands", "would understand"],rOpts:["wouldn't fall", "wouldn't have fallen", "didn't fall", "won't fall"]},
+  {id:'q38',type:'Mixed (Past -> Present)',
+   cause:{lead:'If the company',tail:'operations'},result:{lead:'costs',tail:'lower today'},
+   _c:'had streamlined',_r:'would be',cOpts:["had streamlined", "streamlined", "streamline", "would streamline"],rOpts:["will be", "would be", "would have been", "are"]},
+  {id:'q39',type:'Mixed (Present -> Past)',
+   cause:{lead:'If I',tail:'a hacker'},result:{lead:'I',tail:'that flaw yesterday'},
+   _c:'were',_r:'would have exploited',cOpts:["were", "am", "had been", "will be"],rOpts:["would exploit", "would have exploited", "exploited", "will exploit"]},
+  {id:'q40',type:'Mixed (Past -> Present)',
+   cause:{lead:'If he',tail:'Elias'},result:{lead:'he',tail:'in prison now'},
+   _c:'hadn\'t underestimated',_r:'wouldn\'t be',cOpts:["hadn't underestimated", "didn't underestimate", "doesn't underestimate", "won't underestimate"],rOpts:["won't be", "wouldn't be", "wouldn't have been", "isn't"]},
+  {id:'q41',type:'Type 0 (General Truth)',
+   cause:{lead:'When an attacker',tail:'a flaw'},result:{lead:'Labyrinth always',tail:'a maze'},
+   _c:'exploits',_r:'builds',cOpts:["exploits", "exploited", "had exploited", "would exploit"],rOpts:["builds", "built", "will build", "would build"]},
+  {id:'q42',type:'Type 1 (Real Future)',
+   cause:{lead:'If you already',tail:'how to code'},result:{lead:'you',tail:'the briefing'},
+   _c:'know',_r:'can skip',cOpts:["know", "knew", "had known", "have known"],rOpts:["can skip", "could skip", "skipped", "will have skipped"]},
+  {id:'q43',type:'Type 0 (General Truth)',
+   cause:{lead:'If a network',tail:'a vulnerability'},result:{lead:'hackers',tail:'the flaw'},
+   _c:'has',_r:'exploit',cOpts:["has", "having", "had had", "will have"],rOpts:["exploit", "exploited", "had exploited", "would exploit"]},
+  {id:'q44',type:'Type 2 (Unreal Present)',
+   cause:{lead:'If you',tail:'the opaque policies'},result:{lead:'you',tail:'immediately'},
+   _c:'hated',_r:'would quit',cOpts:["hated", "hate", "had hated", "would hate"],rOpts:["will quit", "would quit", "quit", "would have quit"]},
+  {id:'q45',type:'Type 1 (Real Future)',
+   cause:{lead:'If you',tail:'sign this agreement'},result:{lead:'we',tail:'at once'},
+   _c:'will',_r:'can begin',cOpts:["will", "would", "had", "did"],rOpts:["can begin", "could begin", "began", "will have begun"]},
+  {id:'q46',type:'Type 0 (General Truth)',
+   cause:{lead:'When a company',tail:'a breach'},result:{lead:'it',tail:'report it instantly'},
+   _c:'experiences',_r:'should',cOpts:["experiences", "experienced", "had experienced", "would experience"],rOpts:["should", "would", "might have", "could have"]},
+  {id:'q47',type:'Type 1 (Real Future)',
+   cause:{lead:'If the system',tail:'an error'},result:{lead:'Marcus',tail:'to know immediately'},
+   _c:'flags',_r:'has',cOpts:["flags", "flagged", "had flagged", "would flag"],rOpts:["has", "had", "will have", "would have"]},
+  {id:'q48',type:'Type 1 (Real Future)',
+   cause:{lead:'If you',tail:'already here'},result:{lead:'you',tail:'as well help us'},
+   _c:'are',_r:'might',cOpts:["are", "were", "had been", "will be"],rOpts:["might", "would", "had", "will"]},
+  {id:'q49',type:'Type 1 (Real Future)',
+   cause:{lead:'If they',tail:'patiently'},result:{lead:'Elias',tail:'the infrastructure'},
+   _c:'wait',_r:'will explain',cOpts:["wait", "waited", "had waited", "would wait"],rOpts:["explains", "will explain", "would explain", "had explained"]},
+  {id:'q50',type:'Type 0 (General Truth)',
+   cause:{lead:'Whenever a threat',tail:'on the grid'},result:{lead:'our AI instantly',tail:'it'},
+   _c:'appears',_r:'neutralizes',cOpts:["appears", "appeared", "had appeared", "would appear"],rOpts:["neutralizes", "neutralized", "will neutralize", "would neutralize"]}
 ];
+
+/* How many questions each team answers per round (randomly drawn from the bank).
+   Set to 0 to use the entire bank. */
+const QUESTIONS_PER_ROUND = 10;
 
 let team = "";
 let score = 0;
@@ -178,11 +323,13 @@ async function loadScenarios(){
   try{
     const r = await api('GET', null, 'action=scenarios');
     if(r && r.ok && r.scenarios && r.scenarios.length){
-      // attach option lists from fallback by id (server hides correctForm)
-      scenarios = r.scenarios.map(s=>{
-        const fb = FALLBACK.find(f=>f.id===s.id) || {};
-        return Object.assign({}, s, {cOpts:fb.cOpts||[], rOpts:fb.rOpts||[]});
-      });
+      // server now sends options + tails directly — use them as-is
+      scenarios = r.scenarios.map(s=>({
+        id:s.id, type:s.type,
+        cause:{lead:s.cause.lead, tail:s.cause.tail||''},
+        result:{lead:s.result.lead, tail:s.result.tail||''},
+        cOpts:s.cause.options||[], rOpts:s.result.options||[]
+      }));
       offline = false; $('connNote').textContent = "Live · synced to leaderboard";
       return;
     }
@@ -217,8 +364,11 @@ function renderQuestion(){
   answered = false; selCause = null; selResult = null;
   const q = scenarios[idx];
   $('typeTag').textContent = q.type;
-  $('causeTxt').innerHTML  = 'If ' + q.cause.subject + ' <span class="blank" id="bCause">____</span> …';
-  $('resultTxt').innerHTML = '… ' + q.result.subject + ' <span class="blank" id="bResult">____</span>.';
+  const cTail = q.cause.tail  ? ' ' + q.cause.tail  : '';
+  const rTail = q.result.tail ? ' ' + q.result.tail : '';
+  const rLead = q.result.lead.charAt(0).toUpperCase() + q.result.lead.slice(1);
+  $('causeTxt').innerHTML  = q.cause.lead + ' <span class="blank" id="bCause">____</span>' + cTail + ',';
+  $('resultTxt').innerHTML = rLead + ' <span class="blank" id="bResult">____</span>' + rTail + '.';
   buildOpts('causeOpts', q.cOpts, 'c');
   buildOpts('resultOpts', q.rOpts, 'r');
   $('feedback').className='feedback'; $('feedback').innerHTML='';
@@ -297,11 +447,17 @@ function toast(msg){
   clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200);
 }
 
+function prepareRound(){
+  for(let i=scenarios.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [scenarios[i],scenarios[j]]=[scenarios[j],scenarios[i]]; }
+  if(QUESTIONS_PER_ROUND>0 && scenarios.length>QUESTIONS_PER_ROUND) scenarios=scenarios.slice(0,QUESTIONS_PER_ROUND);
+}
+
 $('joinBtn').onclick = async ()=>{
   const name = $('teamName').value.trim();
   if(name.length<2){ toast("Enter a team name."); return; }
   team = name; $('joinBtn').textContent='Loading…'; $('joinBtn').disabled=true;
   await loadScenarios();
+  prepareRound();
   if(!offline){ try{ await api('POST',{action:'register',team}); }catch(e){} }
   $('teamPill').textContent = team;
   $('join').classList.add('hide'); $('game').classList.remove('hide');
@@ -309,7 +465,7 @@ $('joinBtn').onclick = async ()=>{
 };
 $('submitBtn').onclick = submit;
 $('nextBtn').onclick = next;
-$('againBtn').onclick = ()=>{ idx=0; score=0; $('done').classList.add('hide'); $('game').classList.remove('hide'); renderQuestion(); };
+$('againBtn').onclick = async ()=>{ await loadScenarios(); prepareRound(); idx=0; score=0; $('done').classList.add('hide'); $('game').classList.remove('hide'); renderQuestion(); };
 </script>
 </body>
 </html>
