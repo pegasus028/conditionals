@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Conditional Sentences Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1410; --paper:#f4ead7; --paper-2:#ede0c8;
+    --gold:#c8961e; --gold-deep:#a8780f;
+    --green:#2f7d52; --red:#b8442f; --red-soft:#e8c4b9;
+    --shadow:rgba(26,20,16,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:'Space Mono',monospace;background:var(--paper);color:var(--ink);
+    background-image:radial-gradient(circle at 12% 18%,rgba(200,150,30,.10),transparent 40%),
+                     radial-gradient(circle at 88% 82%,rgba(47,125,82,.08),transparent 42%);
+    min-height:100%;display:flex;flex-direction:column;
+  }
+  .wrap{width:100%;max-width:520px;margin:0 auto;padding:18px 18px 40px;flex:1;display:flex;flex-direction:column}
+  header{text-align:center;margin:8px 0 20px}
+  .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-deep);font-weight:700}
+  h1{font-family:'Fraunces',serif;font-weight:900;font-size:34px;line-height:.95;margin-top:4px}
+  h1 em{font-style:italic;color:var(--gold-deep)}
+  .bar{height:5px;width:64px;background:var(--gold);margin:12px auto 0;border-radius:3px}
+
+  .card{background:var(--paper-2);border:2px solid var(--ink);border-radius:14px;
+        box-shadow:6px 6px 0 var(--shadow);padding:22px}
+  .card + .card{margin-top:16px}
+
+  label{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:8px;color:var(--gold-deep)}
+  input[type=text]{width:100%;font-family:'Space Mono',monospace;font-size:16px;padding:13px 14px;
+        border:2px solid var(--ink);border-radius:9px;background:var(--paper);color:var(--ink)}
+  input[type=text]:focus{outline:none;box-shadow:3px 3px 0 var(--gold)}
+
+  .btn{display:block;width:100%;font-family:'Fraunces',serif;font-weight:900;font-size:18px;
+       padding:15px;border:2px solid var(--ink);border-radius:11px;background:var(--gold);color:var(--ink);
+       cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .08s,box-shadow .08s;margin-top:18px}
+  .btn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+  .btn.ghost{background:var(--paper)}
+
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:13px}
+  .pill{background:var(--ink);color:var(--paper);padding:5px 12px;border-radius:20px;font-weight:700;font-size:12px;letter-spacing:.08em}
+  .scorepill{background:var(--green);color:#fff}
+
+  .type-tag{font-family:'Fraunces',serif;font-weight:900;font-size:20px;margin-bottom:18px;color:var(--gold-deep)}
+  .clause{margin-bottom:20px}
+  .clause .ctxt{font-size:15px;line-height:1.7}
+  .blank{display:inline-block;min-width:96px;border-bottom:3px solid var(--gold);text-align:center;font-weight:700;color:var(--gold-deep)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+  .opt{font-family:'Space Mono',monospace;font-size:14px;padding:11px 8px;border:2px solid var(--ink);border-radius:9px;
+       background:var(--paper);cursor:pointer;text-align:center;transition:all .12s}
+  .opt.sel{background:var(--ink);color:var(--paper)}
+  .opt.right{background:var(--green);color:#fff;border-color:var(--green)}
+  .opt.wrong{background:var(--red);color:#fff;border-color:var(--red)}
+
+  .feedback{margin-top:16px;padding:14px;border-radius:10px;font-size:14px;line-height:1.6;display:none}
+  .feedback.show{display:block}
+  .feedback.good{background:#d6ead7;border:2px solid var(--green)}
+  .feedback.bad{background:var(--red-soft);border:2px solid var(--red)}
+  .feedback strong{font-weight:700}
+  .corr{font-weight:700;color:var(--gold-deep)}
+
+  .timer{font-family:'Fraunces',serif;font-weight:900;font-size:15px}
+  .timer.warn{color:var(--gold-deep)}
+  .timer.danger{color:var(--red)}
+
+  .hide{display:none!important}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120%);
+         background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:30px;font-size:13px;
+         transition:transform .3s;z-index:50;max-width:90%;text-align:center}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .done{text-align:center;padding:30px 10px}
+  .done h2{font-family:'Fraunces',serif;font-size:30px;margin-bottom:8px}
+  .done .big{font-family:'Fraunces',serif;font-size:64px;color:var(--gold-deep);font-weight:900;margin:10px 0}
+  footer{text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);margin-top:20px;opacity:.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Satriwithaya · English Program</div>
+    <h1>Conditional<br><em>Sentences</em> Arena</h1>
+    <div class="bar"></div>
+  </header>
+
+  <!-- JOIN -->
+  <section id="join" class="card">
+    <label for="teamName">Team Name (2 players)</label>
+    <input type="text" id="teamName" placeholder="e.g. The Mixed Conditionals" maxlength="28" autocomplete="off" />
+    <button class="btn" id="joinBtn">Enter the Arena</button>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="card hide">
+    <div class="meta">
+      <span class="pill" id="teamPill">—</span>
+      <span class="pill scorepill" id="scorePill">0 pts</span>
+      <span class="timer" id="timer">--:--</span>
+    </div>
+    <div class="type-tag" id="typeTag">—</div>
+
+    <div class="clause">
+      <div class="ctxt" id="causeTxt"></div>
+      <div class="opts" id="causeOpts"></div>
+    </div>
+    <div class="clause">
+      <div class="ctxt" id="resultTxt"></div>
+      <div class="opts" id="resultOpts"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <button class="btn" id="submitBtn">Submit Answer</button>
+    <button class="btn ghost hide" id="nextBtn">Next Question →</button>
+  </section>
+
+  <!-- DONE -->
+  <section id="done" class="card hide">
+    <div class="done">
+      <h2>Round Complete!</h2>
+      <div class="big" id="finalScore">0</div>
+      <p>points earned. Watch the leaderboard!</p>
+      <button class="btn ghost" id="againBtn">Play Again</button>
+    </div>
+  </section>
+
+  <footer id="connNote">Connecting…</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========= CONFIG ========= */
+/* Paste your deployed Google Apps Script Web App URL below */
+const API_URL = "https://script.google.com/macros/s/AKfycbx2416RBKSZnwVPJjA8yBaLysGxNTGrQfwC3E4aDVaRI6salrHXIO19GKvjN3Dz8lIeAQ/exec";
+
+/* Fallback scenario bank — used if the API is unreachable (offline demo). */
+const FALLBACK = [
+  {id:'q1',type:'Type 2 (Unreal Present)',cause:{subject:'The school director',verbRoot:'know'},result:{subject:'we',verbRoot:'be'},_c:'knew',_r:'would be',
+    cOpts:['knows','knew','had known','would know'],rOpts:['will be','would be','would have been','are']},
+  {id:'q2',type:'Type 0 (General Truth)',cause:{subject:'you',verbRoot:'heat'},result:{subject:'ice',verbRoot:'melt'},_c:'heat',_r:'melts',
+    cOpts:['heat','heats','heated','will heat'],rOpts:['melt','melts','melted','would melt']},
+  {id:'q3',type:'Type 1 (Real Future)',cause:{subject:'it',verbRoot:'rain'},result:{subject:'the students',verbRoot:'stay'},_c:'rains',_r:'will stay',
+    cOpts:['rain','rains','rained','would rain'],rOpts:['stay','stays','will stay','would stay']},
+  {id:'q4',type:'Type 3 (Unreal Past)',cause:{subject:'she',verbRoot:'study'},result:{subject:'she',verbRoot:'pass'},_c:'had studied',_r:'would have passed',
+    cOpts:['studied','had studied','studies','would study'],rOpts:['would pass','passed','would have passed','will pass']},
+  {id:'q5',type:'Mixed (Past → Present)',cause:{subject:'they',verbRoot:'save'},result:{subject:'they',verbRoot:'be'},_c:'had saved',_r:'would be',
+    cOpts:['saved','had saved','save','would save'],rOpts:['are','would be','will be','would have been']},
+];
+
+let team = "";
+let score = 0;
+let scenarios = [];
+let idx = 0;
+let selCause = null, selResult = null;
+let answered = false;
+let offline = false;
+
+const $ = id => document.getElementById(id);
+
+/* ========= NETWORK ========= */
+async function api(method, body, params){
+  if(!API_URL || API_URL.indexOf("PASTE_") === 0) throw new Error("no-api");
+  let url = API_URL;
+  if(params) url += (url.indexOf('?')>-1?'&':'?') + params;
+  const opts = { method, redirect:'follow' };
+  if(method === 'POST'){ opts.headers={'Content-Type':'text/plain;charset=utf-8'}; opts.body=JSON.stringify(body); }
+  const res = await fetch(url, opts);
+  return res.json();
+}
+
+async function loadScenarios(){
+  try{
+    const r = await api('GET', null, 'action=scenarios');
+    if(r && r.ok && r.scenarios && r.scenarios.length){
+      // attach option lists from fallback by id (server hides correctForm)
+      scenarios = r.scenarios.map(s=>{
+        const fb = FALLBACK.find(f=>f.id===s.id) || {};
+        return Object.assign({}, s, {cOpts:fb.cOpts||[], rOpts:fb.rOpts||[]});
+      });
+      offline = false; $('connNote').textContent = "Live · synced to leaderboard";
+      return;
+    }
+    throw new Error("bad");
+  }catch(e){
+    scenarios = FALLBACK.slice();
+    offline = true; $('connNote').textContent = "Offline demo mode (scores not saved)";
+  }
+}
+
+/* ========= TIMER ========= */
+let timerInterval = null;
+function startTimerPoll(){
+  if(offline){ $('timer').textContent="--:--"; return; }
+  const tick = async ()=>{
+    try{
+      const r = await api('GET', null, 'action=leaderboard');
+      if(r && r.timer){
+        const rem = r.timer.remainingMs;
+        if(!r.timer.running || rem<=0){ $('timer').textContent = r.timer.running? "00:00":"WAIT"; return; }
+        const s = Math.floor(rem/1000), m = Math.floor(s/60), ss=String(s%60).padStart(2,'0');
+        $('timer').textContent = m+":"+ss;
+        $('timer').className = 'timer' + (s<30?' danger':s<60?' warn':'');
+      }
+    }catch(e){}
+  };
+  tick(); timerInterval = setInterval(tick, 3000);
+}
+
+/* ========= RENDER ========= */
+function renderQuestion(){
+  answered = false; selCause = null; selResult = null;
+  const q = scenarios[idx];
+  $('typeTag').textContent = q.type;
+  $('causeTxt').innerHTML  = 'If ' + q.cause.subject + ' <span class="blank" id="bCause">____</span> …';
+  $('resultTxt').innerHTML = '… ' + q.result.subject + ' <span class="blank" id="bResult">____</span>.';
+  buildOpts('causeOpts', q.cOpts, 'c');
+  buildOpts('resultOpts', q.rOpts, 'r');
+  $('feedback').className='feedback'; $('feedback').innerHTML='';
+  $('submitBtn').classList.remove('hide'); $('nextBtn').classList.add('hide');
+  $('scorePill').textContent = score + ' pts';
+}
+function buildOpts(containerId, opts, which){
+  const c = $(containerId); c.innerHTML='';
+  opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=()=>{
+      if(answered) return;
+      [...c.children].forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+      if(which==='c'){ selCause=o; $('bCause').textContent=o; } else { selResult=o; $('bResult').textContent=o; }
+    };
+    c.appendChild(b);
+  });
+}
+
+/* ========= SUBMIT ========= */
+async function submit(){
+  if(answered) return;
+  if(selCause===null || selResult===null){ toast("Pick both verbs first!"); return; }
+  answered = true;
+  const q = scenarios[idx];
+  let res;
+  if(offline){
+    res = {ok:true, correct:(selCause===q._c&&selResult===q._r), causeOk:selCause===q._c, resultOk:selResult===q._r,
+           correctCause:q._c, correctResult:q._r, score:score+((selCause===q._c&&selResult===q._r)?10:0)};
+  }else{
+    try{
+      res = await api('POST', {action:'score', team, answeredId:q.id, causeAnswer:selCause, resultAnswer:selResult});
+      if(res.throttled){ toast("Slow down — try again."); answered=false; return; }
+    }catch(e){ toast("Network hiccup. Try again."); answered=false; return; }
+  }
+  score = res.score;
+  markOpts('causeOpts', selCause, res.correctCause, res.causeOk);
+  markOpts('resultOpts', selResult, res.correctResult, res.resultOk);
+
+  const fb = $('feedback');
+  if(res.correct){
+    fb.className='feedback show good'; fb.innerHTML='<strong>✓ Correct!</strong> +10 points.';
+  }else{
+    fb.className='feedback show bad';
+    fb.innerHTML='<strong>✗ Not quite.</strong><br>' +
+      (!res.causeOk?('Cause clause → <span class="corr">'+res.correctCause+'</span><br>'):'') +
+      (!res.resultOk?('Result clause → <span class="corr">'+res.correctResult+'</span>'):'');
+  }
+  $('scorePill').textContent = score + ' pts';
+  $('submitBtn').classList.add('hide'); $('nextBtn').classList.remove('hide');
+  if(idx >= scenarios.length-1) $('nextBtn').textContent = 'Finish ✦';
+}
+function markOpts(containerId, picked, correct, ok){
+  [...$(containerId).children].forEach(b=>{
+    b.classList.remove('sel');
+    if(b.textContent===correct) b.classList.add('right');
+    else if(b.textContent===picked && !ok) b.classList.add('wrong');
+  });
+}
+
+/* ========= FLOW ========= */
+function next(){
+  idx++;
+  if(idx >= scenarios.length){ finish(); return; }
+  renderQuestion();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function finish(){
+  $('game').classList.add('hide'); $('done').classList.remove('hide');
+  $('finalScore').textContent = score;
+}
+
+/* ========= UI ========= */
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+$('joinBtn').onclick = async ()=>{
+  const name = $('teamName').value.trim();
+  if(name.length<2){ toast("Enter a team name."); return; }
+  team = name; $('joinBtn').textContent='Loading…'; $('joinBtn').disabled=true;
+  await loadScenarios();
+  if(!offline){ try{ await api('POST',{action:'register',team}); }catch(e){} }
+  $('teamPill').textContent = team;
+  $('join').classList.add('hide'); $('game').classList.remove('hide');
+  idx=0; score=0; renderQuestion(); startTimerPoll();
+};
+$('submitBtn').onclick = submit;
+$('nextBtn').onclick = next;
+$('againBtn').onclick = ()=>{ idx=0; score=0; $('done').classList.add('hide'); $('game').classList.remove('hide'); renderQuestion(); };
+</script>
+</body>
+</html>
